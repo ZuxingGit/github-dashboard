@@ -1,60 +1,83 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import SearchBar from './components/SearchBar';
 import RepoList from './components/RepoList';
 import { fetchUser, fetchRepos } from './services/githubApi';
 import LanguageChart from './components/LanguageChart';
 import { getLanguageStats } from './utils/languageStats';
+import SkeletonCard from './components/SkeletonCard';
+import UserProfile from './components/UserProfile';
+
+const DEFAULT_USERNAME = 'ZuxingGit';
 
 function App() {
   const [user, setUser] = useState(null);
   const [repos, setRepos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSearch = async (username) => {
-    const userData = await fetchUser(username);
-    const repoData = await fetchRepos(username);
+  const handleSearch = useCallback(async (username) => {
+    setLoading(true);
+    setError(null);
 
-    setUser(userData);
-    setRepos(repoData);
-  };
+    try {
+      const userData = await fetchUser(username);
+      const repoData = await fetchRepos(username);
+      setUser(userData);
+      setRepos(repoData);
+    } catch (error) {
+      setError(error.message);
+      setUser(null);
+      setRepos([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    handleSearch(DEFAULT_USERNAME);
+  }, [handleSearch]);
 
   const languageData = getLanguageStats(repos);
 
   return (
-    <div className='min-h-screen bg-gray-100'>
+    <div className='min-h-screen bg-sky-300'>
       <div className='max-w-6xl mx-auto p-6'>
         <h1 className='text-3xl font-bold mb-6'>GitHub Dashboard</h1>
 
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} initialUsername={DEFAULT_USERNAME} />
 
-        {user && (
-          <div className='bg-white shadow rounded-xl p-6 mt-6 flex gap-6'>
-            <img src={user.avatar_url} className='w-28 h-28 rounded-full' />
+        {loading ? <SkeletonCard /> : user && <UserProfile user={user} />}
 
-            <div>
-              <h2 className='text-xl font-semibold'>{user.name}</h2>
-              <p className='text-gray-600'>{user.bio}</p>
-
-              <div className='flex gap-6 mt-3 text-sm'>
-                <span>Repos: {user.public_repos}</span>
-                <span>Followers: {user.followers}</span>
-                <span>Following: {user.following}</span>
-              </div>
-            </div>
-          </div>
+        {error && (
+          <p className='bg-red-100 text-red-700 p-3 rounded mt-4'>{error}</p>
         )}
 
         {repos.length > 0 && (
           <>
-            <div className='grid md:grid-cols-2 gap-6 mt-8'>
-              <div className='bg-white shadow rounded-xl p-4'>
+            <h2 className='text-2xl font-semibold mt-4'>
+              Programming Language Distribution
+            </h2>
+            <div className='grid md:grid-cols-5 gap-6 mt-4'>
+              <div className='bg-white shadow rounded-xl p-4 col-span-2'>
                 <LanguageChart data={languageData} type='pie' />
               </div>
 
-              <div className='bg-white shadow rounded-xl p-4'>
+              <div className='bg-white shadow rounded-xl py-4 col-span-3'>
                 <LanguageChart data={languageData} type='bar' />
               </div>
             </div>
-            <RepoList repos={repos} />
+
+            {loading ? (
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-6'>
+                {Array(6)
+                  .fill(0)
+                  .map((_, i) => (
+                    <SkeletonCard key={i} />
+                  ))}
+              </div>
+            ) : (
+              <RepoList repos={repos} />
+            )}
           </>
         )}
       </div>
