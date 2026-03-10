@@ -20,26 +20,44 @@ function App() {
   const languageData = getLanguageStats(repos);
 
   return (
-    <div style={{ width: '900px', margin: 'auto' }}>
-      <h1>GitHub Dashboard</h1>
+    <div className='min-h-screen bg-gray-100'>
+      <div className='max-w-6xl mx-auto p-6'>
+        <h1 className='text-3xl font-bold mb-6'>GitHub Dashboard</h1>
 
-      <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} />
 
-      {user && (
-        <div>
-          <img src={user.avatar_url} width='120' />
-          <h2>{user.name}</h2>
-          <p>{user.bio}</p>
-          <p>Repos: {user.public_repos}</p>
-        </div>
-      )}
+        {user && (
+          <div className='bg-white shadow rounded-xl p-6 mt-6 flex gap-6'>
+            <img src={user.avatar_url} className='w-28 h-28 rounded-full' />
 
-      {repos.length > 0 && (
-        <>
-          <LanguageChart data={languageData} />
-          <RepoList repos={repos} />
-        </>
-      )}
+            <div>
+              <h2 className='text-xl font-semibold'>{user.name}</h2>
+              <p className='text-gray-600'>{user.bio}</p>
+
+              <div className='flex gap-6 mt-3 text-sm'>
+                <span>Repos: {user.public_repos}</span>
+                <span>Followers: {user.followers}</span>
+                <span>Following: {user.following}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {repos.length > 0 && (
+          <>
+            <div className='grid md:grid-cols-2 gap-6 mt-8'>
+              <div className='bg-white shadow rounded-xl p-4'>
+                <LanguageChart data={languageData} type='pie' />
+              </div>
+
+              <div className='bg-white shadow rounded-xl p-4'>
+                <LanguageChart data={languageData} type='bar' />
+              </div>
+            </div>
+            <RepoList repos={repos} />
+          </>
+        )}
+      </div>
     </div>
   );
 }

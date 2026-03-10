@@ -11,7 +11,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 
-function LanguageChart({ data }) {
+function LanguageChart({ data, type }) {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AA66CC'];
 
   return (
@@ -19,28 +19,37 @@ function LanguageChart({ data }) {
       <h2>Language Distribution</h2>
 
       {/* Pie Chart */}
-      <PieChart width={400} height={300}>
-        <Pie data={data} dataKey='value' nameKey='name' outerRadius={120} label>
-          {data.map((entry, index) => (
-            <Cell key={index} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
+      {type === 'pie' && (
+        <PieChart width={400} height={300}>
+          <Pie
+            data={data}
+            dataKey='value'
+            nameKey='name'
+            outerRadius={120}
+            label
+          >
+            {data.map((entry, index) => (
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
 
-        <Tooltip />
-        <Legend />
-      </PieChart>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      )}
 
       {/* Bar Chart */}
+      {type === 'bar' && (
+        <BarChart width={500} height={300} data={data}>
+          <CartesianGrid strokeDasharray='3 3' />
+          <XAxis dataKey='name' />
+          <YAxis />
+          <Tooltip />
+          <Legend />
 
-      <BarChart width={500} height={300} data={data}>
-        <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey='name' />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-
-        <Bar dataKey='value' fill='#8884d8' />
-      </BarChart>
+          <Bar dataKey='value' fill='#8884d8' />
+        </BarChart>
+      )}
     </div>
   );
 }

@@ -10,14 +10,17 @@ function SearchBar({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className='flex gap-2'>
       <input
-        type='text'
+        className='flex border rounded-lg p-2'
         placeholder='Enter GitHub username...'
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-      <button type='submit'>Search</button>
+
+      <button className='bg-blue-500 text-white px-4 py-2 rounded-lg'>
+        Search
+      </button>
     </form>
   );
 }
