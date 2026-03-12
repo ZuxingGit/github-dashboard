@@ -13,7 +13,7 @@ You can view a live demo of the GitHub Dashboard here: https://github-dashboard-
 ## Technologies Used
 - **React**: For building the user interface.
 - **Tailwind CSS**: For styling the components.
-- **GitHub API**: To fetch user data and repositories.
-&emsp;`https://api.github.com/users/{username}`
+- **GitHub API**: To fetch user data and repositories.  
+&emsp;`https://api.github.com/users/{username}`  
 &emsp;`https://api.github.com/users/{username}/repos`
 - **recharts**: For rendering the language distribution chart.
