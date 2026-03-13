@@ -5,9 +5,11 @@
 You can view a live demo of the GitHub Dashboard here: https://github-dashboard-zuxing.netlify.app
 
 ## Features
-- **User Profile**: Displays the user's avatar, name, bio, location, and key statistics (public repositories, followers, following).
+- **User Profile**: Displays the user's avatar, name, bio, location, and key statistics (public repositories, followers, following).  
+![alt text](./screenshots/image.png)  
 - **Languages**: Visualizes the distribution of programming languages used in the user's repositories.
-- **Repositories**: Lists the user's repositories with details such as name, description, star count, and main programming language, orders them by recently updated.
+- **Repositories**: Lists the user's repositories with details such as name, description, star count, and main programming language, orders them by recently updated.  
+![alt text](./screenshots/image-1.png)  
 - **Filtering**: Allows filtering repositories by keywords.
 
 ## Technologies Used
